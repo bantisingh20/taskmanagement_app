@@ -29,6 +29,16 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
                         <ClipboardDocumentListIcon className="h-5 w-5" />
                         Dashboard
                     </a>
+                    <a href="priority" className="flex items-center gap-2 hover:text-sky-600">
+                        <BellIcon className="h-5 w-5" />
+                        Priority
+                    </a>
+
+                    <a href="status" className="flex items-center gap-2 hover:text-sky-600">
+                        <UserCircleIcon className="h-5 w-5" />
+                        status
+                    </a>
+                    
                     <a href="add-task" className="flex items-center gap-2 hover:text-sky-600">
                         <PlusCircleIcon className="h-5 w-5" />
                         Add Task
