@@ -4,7 +4,7 @@
 
 // const AddTask = () => {
 //   const { register, handleSubmit, formState: { errors } } = useForm();
- 
+
 //   const { loading, error, successMessage, submitData } = useSubmitHook("tasks");
 
 //   const onSubmit = async (formData) => { 
@@ -18,7 +18,7 @@
 //       </h2>
 
 //       <form className="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm" onSubmit={handleSubmit(onSubmit)}>
- 
+
 //         <div className="md:col-span-2">
 //           <label className="block text-gray-700 mb-1">Task Name</label>
 //           <input
@@ -63,7 +63,7 @@
 //           {errors.targetdate && <p>{errors.targetdate.message}</p>}
 //         </div>
 
-       
+
 //         <div>
 //           <label className="block text-gray-700 mb-1">Priority</label>
 //           <select
@@ -78,7 +78,7 @@
 //           {errors.priority && <p>{errors.priority.message}</p>}
 //         </div>
 
-         
+
 //         <div className="md:col-span-2">
 //           <label className="block text-gray-700 mb-1">Status</label>
 //           <select
@@ -93,7 +93,7 @@
 //           {errors.status && <p>{errors.status.message}</p>}
 //         </div>
 
-      
+
 //         <div className="md:col-span-2 mt-1">
 //           <button
 //             type="submit"
@@ -104,7 +104,7 @@
 //         </div>
 //       </form>
 
-       
+
 //       {loading && <p>Loading...</p>}
 //       {error && <p className="text-red-500">{error}</p>}
 //       {successMessage && <p className="text-green-500">{successMessage}</p>}
@@ -116,206 +116,328 @@
 
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { CalendarIcon, PlusIcon, XMarkIcon } from '@heroicons/react/24/outline';
+import {
+  PencilIcon,
+  TrashIcon,
+  CheckCircleIcon,
+  XCircleIcon,
+  PlusIcon,
+  XMarkIcon
+} from '@heroicons/react/24/outline';
 
 export const AddTask = () => {
   const { register, handleSubmit, formState: { errors }, reset } = useForm();
   const [isModalOpen, setIsModalOpen] = useState(false);
-  
-  // Sample data for dropdowns
-  const priorityOptions = [
-    { id: 1, name: 'High', color: 'bg-red-500' },
-    { id: 2, name: 'Medium', color: 'bg-yellow-500' },
-    { id: 3, name: 'Low', color: 'bg-green-500' }
-  ];
-
-  const statusOptions = [
-    { id: 1, name: 'To Do', color: 'bg-gray-500' },
-    { id: 2, name: 'In Progress', color: 'bg-blue-500' },
-    { id: 3, name: 'Completed', color: 'bg-green-500' }
-  ];
+  const [taskStatuses, setTaskStatuses] = useState([
+    { id: 1, name: 'To Do', color: 'bg-gray-500', status: 'Active' },
+    { id: 2, name: 'In Progress', color: 'bg-blue-500', status: 'Active' },
+    { id: 3, name: 'Blocked', color: 'bg-red-500', status: 'Inactive' },
+    { id: 4, name: 'Completed', color: 'bg-green-500', status: 'Active' }
+  ]);
+  const [currentStatus, setCurrentStatus] = useState(null);
 
   const onSubmit = (data) => {
-    console.log('Task submitted:', data);
+    if (currentStatus) {
+      // Update existing status
+      setTaskStatuses(taskStatuses.map(s =>
+        s.id === currentStatus.id ? {
+          ...s,
+          name: data.name,
+          color: data.color
+        } : s
+      ));
+    } else {
+      // Add new status
+      const newStatus = {
+        id: taskStatuses.length + 1,
+        name: data.name,
+        color: data.color,
+        status: 'Active'
+      };
+      setTaskStatuses([...taskStatuses, newStatus]);
+    }
+    closeModal();
+  };
+
+  const changeStatus = (id) => {
+    setTaskStatuses(taskStatuses.map(s =>
+      s.id === id ? { ...s, status: s.status === 'Active' ? 'Inactive' : 'Active' } : s
+    ));
+  };
+
+  const deleteStatus = (id) => {
+    setTaskStatuses(taskStatuses.filter(s => s.id !== id));
+  };
+
+  const openModal = (status = null) => {
+    setCurrentStatus(status);
+    setIsModalOpen(true);
+    if (status) {
+      reset({ name: status.name, color: status.color });
+    } else {
+      reset();
+    }
+  };
+
+  const closeModal = () => {
     setIsModalOpen(false);
+    setCurrentStatus(null);
     reset();
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 p-4 md:p-8">
-      <div className="max-w-6xl mx-auto">
-        {/* Header with Add Task button */}
+ <>
+ <div className="min-h-screen bg-gray-50 p-4 md:p-8">
+  <div className="max-w-6xl mx-auto">
+    <div className="flex">
+      {/* Main Content */}
+      <div className={`flex-1 transition-all duration-300 ${isModalOpen ? 'mr-80' : ''}`}>
         <div className="flex justify-between items-center mb-8">
           <h1 className="text-2xl font-bold text-gray-800">Task Management</h1>
           <button
             onClick={() => setIsModalOpen(true)}
-            className="flex items-center gap-2 px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700"
+            className="flex items-center gap-1 px-3 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700"
           >
             <PlusIcon className="h-5 w-5" />
-            Add Task
+            <span>Add Status</span>
           </button>
         </div>
 
-        {/* Task list table would go here */}
-
-        {/* Right Side Modal */}
-        {isModalOpen && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-end z-50">
-            <div className="bg-white h-full w-full max-w-md shadow-xl overflow-y-auto">
-              <div className="p-6 h-full flex flex-col">
-                <div className="flex justify-between items-center mb-6">
-                  <h2 className="text-xl font-bold text-gray-800">Add New Task</h2>
-                  <button
-                    onClick={() => {
-                      setIsModalOpen(false);
-                      reset();
-                    }}
-                    className="p-1 rounded-full hover:bg-gray-100"
-                  >
-                    <XMarkIcon className="h-6 w-6 text-gray-500" />
-                  </button>
-                </div>
-
-                <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 flex-1">
-                  {/* Hidden ID field */}
-                  <input type="hidden" {...register("id")} />
-
-                  {/* Task Name */}
-                  <div>
-                    <label htmlFor="taskName" className="block text-sm font-medium text-gray-700 mb-1">
-                      Task Name*
-                    </label>
-                    <input
-                      type="text"
-                      id="taskName"
-                      {...register("taskName", { required: "Task name is required" })}
-                      className={`w-full px-3 py-2 border rounded-md shadow-sm ${
-                        errors.taskName ? 'border-red-300 focus:ring-red-500 focus:border-red-500' 
-                        : 'border-gray-300 focus:ring-indigo-500 focus:border-indigo-500'
-                      }`}
-                      placeholder="Enter task name"
-                    />
-                    {errors.taskName && (
-                      <p className="mt-1 text-sm text-red-600">{errors.taskName.message}</p>
-                    )}
-                  </div>
-
-                  {/* Task Description */}
-                  <div>
-                    <label htmlFor="description" className="block text-sm font-medium text-gray-700 mb-1">
-                      Description
-                    </label>
-                    <textarea
-                      id="description"
-                      {...register("description")}
-                      rows={3}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
-                      placeholder="Enter task description"
-                    />
-                  </div>
-
-                  {/* Priority Dropdown */}
-                  <div>
-                    <label htmlFor="priority" className="block text-sm font-medium text-gray-700 mb-1">
-                      Priority*
-                    </label>
-                    <select
-                      id="priority"
-                      {...register("priority", { required: "Priority is required" })}
-                      className={`w-full px-3 py-2 border rounded-md shadow-sm ${
-                        errors.priority ? 'border-red-300 focus:ring-red-500 focus:border-red-500' 
-                        : 'border-gray-300 focus:ring-indigo-500 focus:border-indigo-500'
-                      }`}
+        <div className="bg-white rounded-lg shadow overflow-hidden">
+          <table className="min-w-full divide-y divide-gray-200">
+            <thead className="bg-gray-50">
+              <tr>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Sr No</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Status Name</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Color</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
+                <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase">Actions</th>
+              </tr>
+            </thead>
+            <tbody className="bg-white divide-y divide-gray-200">
+              {taskStatuses.map((status, index) => (
+                <tr key={status.id}>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{index + 1}</td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                    {status.name}
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    <div className={`w-6 h-6 rounded-full ${status.color}`}></div>
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full 
+                         ${status.status === 'Active' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`}
                     >
-                      <option value="">Select priority</option>
-                      {priorityOptions.map((priority) => (
-                        <option key={priority.id} value={priority.id}>
-                          {priority.name}
-                        </option>
-                      ))}
-                    </select>
-                    {errors.priority && (
-                      <p className="mt-1 text-sm text-red-600">{errors.priority.message}</p>
-                    )}
-                  </div>
-
-                  {/* Status Dropdown */}
-                  <div>
-                    <label htmlFor="status" className="block text-sm font-medium text-gray-700 mb-1">
-                      Status*
-                    </label>
-                    <select
-                      id="status"
-                      {...register("status", { required: "Status is required" })}
-                      className={`w-full px-3 py-2 border rounded-md shadow-sm ${
-                        errors.status ? 'border-red-300 focus:ring-red-500 focus:border-red-500' 
-                        : 'border-gray-300 focus:ring-indigo-500 focus:border-indigo-500'
-                      }`}
-                    >
-                      <option value="">Select status</option>
-                      {statusOptions.map((status) => (
-                        <option key={status.id} value={status.id}>
-                          {status.name}
-                        </option>
-                      ))}
-                    </select>
-                    {errors.status && (
-                      <p className="mt-1 text-sm text-red-600">{errors.status.message}</p>
-                    )}
-                  </div>
-
-                  {/* Target Date */}
-                  <div>
-                    <label htmlFor="targetDate" className="block text-sm font-medium text-gray-700 mb-1">
-                      Target Date*
-                    </label>
-                    <div className="relative">
-                      <input
-                        type="date"
-                        id="targetDate"
-                        {...register("targetDate", { required: "Target date is required" })}
-                        className={`w-full px-3 py-2 border rounded-md shadow-sm ${
-                          errors.targetDate ? 'border-red-300 focus:ring-red-500 focus:border-red-500' 
-                          : 'border-gray-300 focus:ring-indigo-500 focus:border-indigo-500'
-                        }`}
-                      />
-                      <div className="absolute right-3 top-2.5">
-                        <CalendarIcon className="h-5 w-5 text-gray-400" />
-                      </div>
+                      {status.status}
+                    </span>
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                    <div className="flex justify-end space-x-2">
+                      <button
+                        onClick={() => editStatus(status)}
+                        className="p-1 text-indigo-600 hover:text-indigo-900 hover:bg-indigo-50 rounded"
+                        title="Edit"
+                      >
+                        <PencilIcon className="h-5 w-5" />
+                      </button>
+                      <button
+                        onClick={() => deleteStatus(status.id)}
+                        className="p-1 text-red-600 hover:text-red-900 hover:bg-red-50 rounded"
+                        title="Delete"
+                      >
+                        <TrashIcon className="h-5 w-5" />
+                      </button>
+                      <button
+                        onClick={() => changeStatus(status.id)}
+                        className="p-1 text-gray-600 hover:text-gray-900 hover:bg-gray-50 rounded"
+                        title={status.status === 'Active' ? 'Deactivate' : 'Activate'}
+                      >
+                        {status.status === 'Active' ? (
+                          <XCircleIcon className="h-5 w-5" />
+                        ) : (
+                          <CheckCircleIcon className="h-5 w-5" />
+                        )}
+                      </button>
                     </div>
-                    {errors.targetDate && (
-                      <p className="mt-1 text-sm text-red-600">{errors.targetDate.message}</p>
-                    )}
-                  </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
 
-                  {/* Form Actions */}
-                  <div className="flex space-x-3 pt-4 border-t border-gray-200 mt-auto">
+      {/* Right Side Modal */}
+      {isModalOpen && (
+        <div className="fixed right-0 top-0 h-full w-full sm:w-80 bg-white shadow-lg z-50 transition-all duration-300">
+          <div className="p-6 h-full flex flex-col">
+            <div className="flex justify-between items-center mb-6">
+              <h3 className="text-lg font-medium text-gray-900">
+                {currentStatus ? 'Edit Status' : 'Add Status'}
+              </h3>
+              <button onClick={closeModal} className="text-gray-400 hover:text-gray-500">
+                <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+
+            <form onSubmit={handleSubmit(onSubmit)} className="flex-1 flex flex-col">
+              <div className="mb-4">
+                <label htmlFor="taskName" className="block text-sm font-medium text-gray-700 mb-1">
+                  Task Name*
+                </label>
+                <input
+                  type="text"
+                  id="taskName"
+                  {...register("taskName", { required: "Task name is required" })}
+                  className={`w-full px-3 py-2 border rounded-md shadow-sm ${errors.taskName ? 'border-red-300 focus:ring-red-500 focus:border-red-500'
+                    : 'border-gray-300 focus:ring-indigo-500 focus:border-indigo-500'
+                    }`}
+                  placeholder="Enter task name"
+                />
+                {errors.taskName && (
+                  <p className="mt-1 text-sm text-red-600">{errors.taskName.message}</p>
+                )}
+              </div>
+
+              <div className='mb-4'>
+                <label htmlFor="description" className="block text-sm font-medium text-gray-700 mb-1">
+                  Description
+                </label>
+                <textarea
+                  id="description"
+                  {...register("description")}
+                  rows={3}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+                  placeholder="Enter task description"
+                />
+              </div>
+
+              <div className="mb-4">
+                <label htmlFor="priority" className="block text-sm font-medium text-gray-700 mb-1">
+                  Priority*
+                </label>
+                <select
+                  id="priority"
+                  {...register("priority", { required: "Priority is required" })}
+                  className={`w-full px-3 py-2 border rounded-md shadow-sm ${errors.priority ? 'border-red-300 focus:ring-red-500 focus:border-red-500'
+                    : 'border-gray-300 focus:ring-indigo-500 focus:border-indigo-500'
+                    }`}
+                >
+                  <option value="">Select priority</option>
+                  {priorityOptions.map((priority) => (
+                    <option key={priority.id} value={priority.id}>
+                      {priority.name}
+                    </option>
+                  ))}
+                </select>
+                {errors.priority && (
+                  <p className="mt-1 text-sm text-red-600">{errors.priority.message}</p>
+                )}
+              </div>
+
+              <div className="mb-4">
+                <label htmlFor="status" className="block text-sm font-medium text-gray-700 mb-1">
+                  Status*
+                </label>
+                <select
+                  id="status"
+                  {...register("status", { required: "Status is required" })}
+                  className={`w-full px-3 py-2 border rounded-md shadow-sm ${errors.status ? 'border-red-300 focus:ring-red-500 focus:border-red-500'
+                    : 'border-gray-300 focus:ring-indigo-500 focus:border-indigo-500'
+                    }`}
+                >
+                  <option value="">Select status</option>
+                  {statusOptions.map((status) => (
+                    <option key={status.id} value={status.id}>
+                      {status.name}
+                    </option>
+                  ))}
+                </select>
+                {errors.status && (
+                  <p className="mt-1 text-sm text-red-600">{errors.status.message}</p>
+                )}
+              </div>
+
+              <div className="mb-4">
+                <label htmlFor="targetDate" className="block text-sm font-medium text-gray-700 mb-1">
+                  Target Date*
+                </label>
+                <div className="relative">
+                  <input
+                    type="date"
+                    id="targetDate"
+                    {...register("targetDate", { required: "Target date is required" })}
+                    className={`w-full px-3 py-2 border rounded-md shadow-sm ${errors.targetDate ? 'border-red-300 focus:ring-red-500 focus:border-red-500'
+                      : 'border-gray-300 focus:ring-indigo-500 focus:border-indigo-500'
+                      }`}
+                  />
+                  <div className="absolute right-3 top-2.5">
+                  </div>
+                </div>
+                {errors.targetDate && (
+                  <p className="mt-1 text-sm text-red-600">{errors.targetDate.message}</p>
+                )}
+              </div>
+
+              {currentStatus && (
+                <div className="mb-4">
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Current Status</label>
+                  <div className="flex items-center">
+                    <span className={`px-3 py-1 rounded-full text-xs font-medium 
+                         ${currentStatus.status === 'Active' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`}
+                    >
+                      {currentStatus.status}
+                    </span>
                     <button
                       type="button"
-                      onClick={() => {
-                        setIsModalOpen(false);
-                        reset();
-                      }}
-                      className="flex-1 inline-flex justify-center items-center gap-2 px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                      onClick={() => changeStatus(currentStatus.id)}
+                      className="ml-3 px-3 py-1 text-xs rounded bg-gray-100 hover:bg-gray-200"
                     >
-                      <XMarkIcon className="h-5 w-5" />
-                      Cancel
-                    </button>
-                    <button
-                      type="submit"
-                      className="flex-1 inline-flex justify-center items-center gap-2 px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                    >
-                      <PlusIcon className="h-5 w-5" />
-                      Add Task
+                      Change Status
                     </button>
                   </div>
-                </form>
+                </div>
+              )}
+
+              <div className="mt-auto space-x-3">
+                <button
+                  type="button"
+                  onClick={closeModal}
+                  className="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="w-full px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700"
+                >
+                  {currentStatus ? 'Update' : 'Save'} Status
+                </button>
               </div>
-            </div>
+            </form>
           </div>
-        )}
-      </div>
+        </div>
+      )}
     </div>
+  </div>
+</div>
+
+</>
   );
 };
 
+
+
+const priorityOptions = [
+  { id: 1, name: 'High', color: 'bg-red-500' },
+  { id: 2, name: 'Medium', color: 'bg-yellow-500' },
+  { id: 3, name: 'Low', color: 'bg-green-500' }
+];
+
+const statusOptions = [
+  { id: 1, name: 'To Do', color: 'bg-gray-500' },
+  { id: 2, name: 'In Progress', color: 'bg-blue-500' },
+  { id: 3, name: 'Completed', color: 'bg-green-500' }
+];

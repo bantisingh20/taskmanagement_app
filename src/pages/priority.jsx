@@ -1,5 +1,13 @@
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
+import {
+  PencilIcon,
+  TrashIcon,
+  CheckCircleIcon,
+  XCircleIcon,
+  PlusIcon,
+  XMarkIcon
+} from '@heroicons/react/24/outline';
 
 export const Priority = () => {
   const { register, handleSubmit, formState: { errors }, reset } = useForm();
@@ -14,7 +22,7 @@ export const Priority = () => {
   const onSubmit = (data) => {
     if (currentPriority) {
       // Update existing priority
-      setPriorityList(priorityList.map(p => 
+      setPriorityList(priorityList.map(p =>
         p.id === currentPriority.id ? { ...p, name: data.name } : p
       ));
     } else {
@@ -30,7 +38,7 @@ export const Priority = () => {
   };
 
   const changeStatus = (id) => {
-    setPriorityList(priorityList.map(p => 
+    setPriorityList(priorityList.map(p =>
       p.id === id ? { ...p, status: p.status === 'Active' ? 'Inactive' : 'Active' } : p
     ));
   };
@@ -64,10 +72,11 @@ export const Priority = () => {
             <div className="flex justify-between items-center mb-8">
               <h1 className="text-2xl font-bold text-gray-800">Priority Management</h1>
               <button
-                onClick={() => openModal()}
-                className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+                onClick={() => setIsModalOpen(true)}
+                className="flex items-center gap-1 px-3 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700"
               >
-                Add Priority
+                <PlusIcon className="h-5 w-5" />
+                <span>Add Priority</span>
               </button>
             </div>
 
@@ -100,19 +109,24 @@ export const Priority = () => {
                           onClick={() => openModal(priority)}
                           className="text-blue-600 hover:text-blue-900"
                         >
-                          Edit
+                          <PencilIcon className="h-5 w-5" />
+
                         </button>
                         <button
                           onClick={() => deletePriority(priority.id)}
                           className="text-red-600 hover:text-red-900"
                         >
-                          Delete
+                          <TrashIcon className="h-5 w-5" />
                         </button>
                         <button
                           onClick={() => changeStatus(priority.id)}
                           className={`${priority.status === 'Active' ? 'text-yellow-600 hover:text-yellow-900' : 'text-green-600 hover:text-green-900'}`}
                         >
-                          {priority.status === 'Active' ? 'Deactivate' : 'Activate'}
+                          {status.status === 'Active' ? (
+                            <XCircleIcon className="h-5 w-5" />
+                          ) : (
+                            <CheckCircleIcon className="h-5 w-5" />
+                          )}
                         </button>
                       </td>
                     </tr>
