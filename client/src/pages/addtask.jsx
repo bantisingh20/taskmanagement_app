@@ -128,18 +128,18 @@ import {
 export const AddTask = () => {
   const { register, handleSubmit, formState: { errors }, reset } = useForm();
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [taskStatuses, setTaskStatuses] = useState([
-    { id: 1, name: 'To Do', color: 'bg-gray-500', status: 'Active' },
-    { id: 2, name: 'In Progress', color: 'bg-blue-500', status: 'Active' },
-    { id: 3, name: 'Blocked', color: 'bg-red-500', status: 'Inactive' },
-    { id: 4, name: 'Completed', color: 'bg-green-500', status: 'Active' }
+  const [listdata, setlistdata] = useState([
+    { id: 1, taskName: 'To Do', priority: 'bg-gray-500', taskstatus: 'Open', targetDate: '01.Jan.2202', status: 'Active' },
+    { id: 2, taskName: 'In Progress', priority: 'bg-blue-500', taskstatus: 'In Progress', targetDate: '01.Jan.2202', status: 'Active' },
+    { id: 3, taskName: 'Blocked', priority: 'bg-red-500', taskstatus: 'Blocked', targetDate: '01.Jan.2202', status: 'Inactive' },
+    { id: 4, taskName: 'Completed', priority: 'bg-green-500', taskstatus: 'Completed', targetDate: '01.Jan.2202', status: 'Active' }
   ]);
   const [currentStatus, setCurrentStatus] = useState(null);
 
   const onSubmit = (data) => {
     if (currentStatus) {
       // Update existing status
-      setTaskStatuses(taskStatuses.map(s =>
+      setlistdata(listdata.map(s =>
         s.id === currentStatus.id ? {
           ...s,
           name: data.name,
@@ -154,19 +154,19 @@ export const AddTask = () => {
         color: data.color,
         status: 'Active'
       };
-      setTaskStatuses([...taskStatuses, newStatus]);
+      setlistdata([...listdata, newStatus]);
     }
     closeModal();
   };
 
   const changeStatus = (id) => {
-    setTaskStatuses(taskStatuses.map(s =>
+    setlistdata(listdata.map(s =>
       s.id === id ? { ...s, status: s.status === 'Active' ? 'Inactive' : 'Active' } : s
     ));
   };
 
   const deleteStatus = (id) => {
-    setTaskStatuses(taskStatuses.filter(s => s.id !== id));
+    setlistdata(listdata.filter(s => s.id !== id));
   };
 
   const openModal = (status = null) => {
@@ -208,22 +208,31 @@ export const AddTask = () => {
             <thead className="bg-gray-50">
               <tr>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Sr No</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Status Name</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Color</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Task Name</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Priority</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Task Status</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Target Date</th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
                 <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase">Actions</th>
               </tr>
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
-              {taskStatuses.map((status, index) => (
+              {listdata.map((status, index) => (
                 <tr key={status.id}>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{index + 1}</td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                    {status.name}
+                    {status.taskName}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
-                    <div className={`w-6 h-6 rounded-full ${status.color}`}></div>
+                    <div className={`w-6 h-6 rounded-full ${status.priority}`}></div>
                   </td>
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    <div className={`w-6 h-6 rounded-full ${status.taskstatus}`}></div>
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    <div className={`w-6 h-6 rounded-full ${status.targetDate}`}></div>
+                  </td>
+
                   <td className="px-6 py-4 whitespace-nowrap">
                     <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full 
                          ${status.status === 'Active' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`}
