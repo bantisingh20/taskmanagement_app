@@ -1,6 +1,6 @@
 const TaskStatusModel = require('../models/taskstatus.model');
 
-module.exports.getAllTaskStatuses = async (req, res) => {
+exports.getAllTaskStatuses = async (req, res) => {
   try {
     const taskStatuses = await TaskStatusModel.find().where({isDelete: false});
     res.status(200).json({ success: true, message: 'Task statuses fetched successfully', data: taskStatuses });
@@ -9,7 +9,7 @@ module.exports.getAllTaskStatuses = async (req, res) => {
   }
 };
 
-module.exports.createTaskStatus = async (req, res) => {
+exports.createTaskStatus = async (req, res) => {
   const taskStatus = new TaskStatusModel(req.body);
   try {
     const savedTaskStatus = await taskStatus.save();
@@ -19,7 +19,7 @@ module.exports.createTaskStatus = async (req, res) => {
   }
 };
 
-module.exports.updateTaskStatus = async(req, res) => {
+exports.updateTaskStatus = async(req, res) => {
     try {
         const UpdateTaskStatus = await TaskStatusModel.findByIdAndUpdate(req.params.id,req.body,{new : true}).where({isDelete: false});
          if (!UpdateTaskStatus) return res.status(404).json({ success: false, message: 'Task Status not found' });
@@ -29,7 +29,7 @@ module.exports.updateTaskStatus = async(req, res) => {
     }
 };
 
-module.exports.getTaskStatusById = async (req, res) => {
+exports.getTaskStatusById = async (req, res) => {
   try {
     const taskStatus = await TaskStatusModel.findById(req.params.id).where({isDelete: false});
     if (!taskStatus) return res.status(404).json({ success: false, message: 'Task Status not found' });
@@ -39,7 +39,7 @@ module.exports.getTaskStatusById = async (req, res) => {
   }
 };
 
-module.exports.deleteTaskStatus = async (req, res) => {
+exports.deleteTaskStatus = async (req, res) => {
   try {
     const taskStatus = await TaskStatusModel.findById(req.params.id).where({isDelete: false});
     if (!taskStatus) return res.status(404).json({ success: false, message: 'Task Status not found' });
@@ -51,7 +51,7 @@ module.exports.deleteTaskStatus = async (req, res) => {
   }
 };
 
-module.exports.activateDeactivateTaskStatus = async (req, res) => {
+exports.activateDeactivateTaskStatus = async (req, res) => {
   try {
     const taskStatus = await TaskStatusModel.findById(req.params.id).where({isDelete: false});
     if (!taskStatus) return res.status(404).json({ success: false, message: 'Task Status not found' });

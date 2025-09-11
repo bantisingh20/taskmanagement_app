@@ -1,15 +1,28 @@
 const PriorityModel = require('../models/priority.model');
+const httpStatus = require('../constants/httpStatus');
 
-module.exports.getAllPriorities = async (req, res) => {
+// module.exports.getAllPriorities = async (req, res) => {
+//   try {
+//     const priorities = await PriorityModel.find().where({isDelete: false});
+    
+//     res.status(200).json({ success: true, message: 'Priorities fetched successfully', data: priorities ,pagination: {} });
+//   } catch (error) {
+//     res.status(500).json({ success: false, message: error.message });
+//   }
+// };
+
+exports.getAllPriorities = async (req, res) => {
   try {
     const priorities = await PriorityModel.find().where({isDelete: false});
-    res.status(200).json({ success: true, message: 'Priorities fetched successfully', data: priorities ,pagination: {} });
+    const total = 0;//await PriorityModel.countDocuments().where({isDelete: false});
+    console.log(priorities);
+    res.status(200).json(httpStatus.success(priorities, { total }));
   } catch (error) {
-    res.status(500).json({ success: false, message: error.message });
+    res.status(500).json(httpStatus.error(error.message, 500));
   }
 };
 
-module.exports.createPriority = async (req, res) => {
+exports.createPriority = async (req, res) => {
   const priority = new PriorityModel(req.body);
   try {
     const savedPriority = await priority.save();
@@ -19,7 +32,7 @@ module.exports.createPriority = async (req, res) => {
   }
 };
 
-module.exports.UpdatePriority = async(req,res) =>{
+exports.UpdatePriority = async(req,res) =>{
     try{
         const updatedPriority = await PriorityModel.findByIdAndUpdate(req.params.id, req.body, { new: true }).where({isDelete: false});
         if (!updatedPriority) return res.status(404).json({ success: false, message: 'Priority not found' });
@@ -29,7 +42,7 @@ module.exports.UpdatePriority = async(req,res) =>{
     }
 }
 
-module.exports.getPriorityById = async (req, res) => {
+exports.getPriorityById = async (req, res) => {
   try {
     const priority = await PriorityModel.findById(req.params.id).where({isDelete: false});
     if (!priority) return res.status(404).json({ success: false, message: 'Priority not found' });
@@ -39,7 +52,7 @@ module.exports.getPriorityById = async (req, res) => {
   }
 };
 
-module.exports.deletePriority = async (req, res) => {
+exports.deletePriority = async (req, res) => {
   try {
     const priority = await PriorityModel.findById(req.params.id).where({isDelete: false});
     if (!priority) return res.status(404).json({ success: false, message: 'Priority not found' });
@@ -51,7 +64,7 @@ module.exports.deletePriority = async (req, res) => {
   }
 };
 
-module.exports.activateDeactivatePriority = async (req, res) => {
+exports.activateDeactivatePriority = async (req, res) => {
   try {
     const priority = await PriorityModel.findById(req.params.id).where({isDelete: false});
     if (!priority) return res.status(404).json({ success: false, message: 'Priority not found' });

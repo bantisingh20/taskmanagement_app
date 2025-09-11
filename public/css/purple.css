@@ -1,0 +1,134 @@
+/* Global Color Variables */
+:root {
+    --primary-color: #14b8a6; /* Teal Primary */
+    --secondary-color: #4ade80; /* Success Green */
+    --danger-color: #991b1b; /* Red for Danger */
+    --info-color: #7dd3fc; /* Light Blue (If needed) */
+    --neutral-color: #6b7280; /* Neutral (gray) */
+}
+
+/* Background Colors */
+.bg-primary { background-color: var(--primary-color); } /* Teal */
+.bg-success { background-color: var(--secondary-color); } /* Green for success */
+.bg-danger { background-color: var(--danger-color); } /* Red for danger */
+
+.bg-info { background-color: var(--info-color); } /* Light Blue, if needed for info */
+.bg-neutral { background-color: var(--neutral-color); } /* Neutral gray for info/backgrounds */
+
+/* Light variants of colors */
+.bg-primary-light { background-color: rgba(20, 184, 166, 0.2); } /* Light Teal */
+.bg-success-light { background-color: rgba(74, 222, 128, 0.2); } /* Light Green */
+.bg-danger-light { background-color: rgba(153, 27, 27, 0.2); } /* Light Red */
+
+/* Text Colors */
+.text-primary { color: var(--primary-color); } /* Teal */
+.text-success { color: var(--secondary-color); } /* Green for success */
+.text-danger { color: var(--danger-color); } /* Red for danger */
+.text-info { color: var(--info-color); } /* Light Blue (for info, if needed) */
+.text-neutral { color: var(--neutral-color); } /* Neutral (gray) */
+
+/* Hover Effects */
+.hover\:bg-primary:hover { background-color: var(--primary-color); } /* Hover Teal */
+.hover\:bg-success:hover { background-color: var(--secondary-color); } /* Hover Green */
+.hover\:bg-danger:hover { background-color: var(--danger-color); } /* Hover Red */
+.hover\:bg-info:hover { background-color: var(--info-color); } /* Hover Light Blue */
+
+/* Font Sizes */
+.text-xs { font-size: 12px; }
+.text-sm { font-size: 14px; }
+.text-lg { font-size: 18px; }
+
+/* Font Alignment */
+.text-left { text-align: left; }
+.text-right { text-align: right; }
+
+/* Font Weight */
+.font-medium { font-weight: 500; }
+.font-semibold { font-weight: 600; }
+
+/* Border Radius */
+.rounded-lg { border-radius: 0.5rem; }
+.rounded-full { border-radius: 9999px; }
+
+/* Global Color Variables */
+:root {
+    --primary-color: #14b8a6; /* Teal Primary */
+    --secondary-color: #4ade80; /* Success Green */
+    --danger-color: #991b1b; /* Red for Danger */
+    --info-color: #7dd3fc; /* Light Blue (If needed) */
+    --neutral-color: #6b7280; /* Neutral (gray) */
+}
+
+/* Table Styling */
+table {
+    width: 100%;
+    border-collapse: collapse; /* Ensures borders merge */
+    text-align: left;
+}
+
+th, td {
+    padding: 12px 15px;
+    border: 1px solid #e0e0e0; /* Light gray border */
+    font-size: 14px;
+    font-weight: 500;
+}
+
+th {
+    background-color: var(--primary-color); /* Teal header */
+    color: #ffffff; /* White text for headers */
+}
+
+/* Alternating Row Colors */
+tr:nth-child(odd) {
+    background-color: #f9fafb; /* Light gray for odd rows */
+}
+
+tr:nth-child(even) {
+    background-color: #ffffff; /* White for even rows */
+}
+
+/* Hover Effects for Table Rows */
+tr:hover {
+    background-color: rgba(20, 184, 166, 0.1); /* Light teal on row hover */
+}
+
+/* Hover Text Color for Cells */
+td:hover {
+    color: var(--primary-color); /* Teal text color on hover */
+}
+
+/* Adding Color Variants on Hover for Success and Danger */
+tr:hover.bg-success {
+    background-color: rgba(74, 222, 128, 0.1); /* Light green for success row hover */
+}
+
+tr:hover.bg-danger {
+    background-color: rgba(153, 27, 27, 0.1); /* Light red for danger row hover */
+}
+
+/* Text Colors */
+.text-primary { color: var(--primary-color); } /* Teal */
+.text-success { color: var(--secondary-color); } /* Green for success */
+.text-danger { color: var(--danger-color); } /* Red for danger */
+.text-info { color: var(--info-color); } /* Light Blue (for info, if needed) */
+.text-neutral { color: var(--neutral-color); } /* Neutral (gray) */
+
+
+.hover\:bg-primary:hover { background-color: var(--primary-color); } /* Hover Teal */
+.hover\:bg-success:hover { background-color: var(--secondary-color); } /* Hover Green */
+/* Font Sizes */
+.text-xs { font-size: 12px; }
+.text-sm { font-size: 14px; }
+.text-lg { font-size: 18px; }
+
+/* Font Alignment */
+.text-left { text-align: left; }
+.text-right { text-align: right; }
+
+/* Font Weight */
+.font-medium { font-weight: 500; }
+.font-semibold { font-weight: 600; }
+
+/* Border Radius */
+.rounded-lg { border-radius: 0.5rem; }
+.rounded-full { border-radius: 9999px; }
