@@ -1,6 +1,6 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
-const taskstatusSchema = new mongoose.Schema({
+const priorityScehma = new mongoose.Schema({
   name: { type: String, required: true },
   color: { type: String, required: false },
   isActive: { type: Boolean, default: true },
@@ -10,4 +10,4 @@ const taskstatusSchema = new mongoose.Schema({
 
 });
 
-module.exports = mongoose.model("TaskStatus", taskstatusSchema);
+module.exports = mongoose.model("Priority", priorityScehma);
