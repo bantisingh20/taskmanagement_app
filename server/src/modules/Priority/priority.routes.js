@@ -1,6 +1,6 @@
 //const express = require('express');
 const router = require('express').Router();
-const priorityController = require('../controllers/priority.controller');
+const priorityController = require('./priority.controller');
 
 router.get('/get-all-prioritys', priorityController.getAllPriorities);
 router.post('/add', priorityController.createPriority);

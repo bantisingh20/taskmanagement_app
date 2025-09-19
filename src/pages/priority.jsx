@@ -9,12 +9,11 @@ import {
   XMarkIcon
 } from '@heroicons/react/24/outline';
 import { useApi } from '../hooks/useApi';
-import {createPriority, deletePriority, getpriority, makeActiveorInactive, updatePriority} from '../service/priority';
+import { createPriority, deletePriority, getpriority, makeActiveorInactive, updatePriority } from '../service/priority';
 import { useSnackbar } from '../components/SnackbarProvider';
 
-
 export const Priority = () => {
-const { showSnackbar } = useSnackbar();
+  const { showSnackbar } = useSnackbar();
   const [theme, setTheme] = useState('teal'); // Default theme
 
   const switchTheme = (newTheme) => {
@@ -32,19 +31,19 @@ const { showSnackbar } = useSnackbar();
   const { register, handleSubmit, formState: { errors }, reset } = useForm();
   const [list, setlist] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [currentitem, setcurrentitem ] = useState(null);
+  const [currentitem, setcurrentitem] = useState(null);
 
   //const { data, error, loading, execute, callApi } = useApi({ url: '', method: 'GET', autoFetch: false });
 
   const fetchPriorities = async () => {
-    const response = await getpriority(); 
-    if(response?.error){
+    const response = await getpriority();
+    if (response?.error) {
       showSnackbar('Error fetching priorities: ' + response.error, 'error');
       return;
     }
     showSnackbar('Priorities fetched successfully', 'success');
     console.log('Fetched priorities data:', response);
-   // const response = await execute({ url: '/priority/get-all-prioritys', method: 'GET' });
+    // const response = await execute({ url: '/priority/get-all-prioritys', method: 'GET' });
     setlist(response.data);
   };
 
@@ -110,20 +109,22 @@ const { showSnackbar } = useSnackbar();
     }
   };
 
+  
   const openModal = (priority = null) => {
     setcurrentitem(priority);
     setIsModalOpen(true);
     if (priority) {
-      reset({ name: priority.name });
+      reset({ name: priority.name }); // reset form with data for editing
     } else {
-      reset();
+      reset({name:null }); // clear form for adding new
     }
   };
+
 
   const closeModal = () => {
     setIsModalOpen(false);
     setcurrentitem(null);
-    reset();
+    //reset();
   };
 
 
@@ -140,81 +141,6 @@ const { showSnackbar } = useSnackbar();
               Toggle Theme (Current: {theme})
             </button>
           </div> */}
-
-          {/* Main Content */}
-          <div className={`flex-1 transition-all duration-300 ${isModalOpen ? 'mr-0 sm:mr-80' : ''}`}>
-            <div className="flex justify-between items-center mb-4">
-              <h1 className="text-lg font-semibold text-gray-800">Priority</h1>
-              <button
-                onClick={() => { setIsModalOpen(true); reset(); setcurrentitem(null); }}
-                className="flex items-center gap-1 px-2 py-1 bg-primary text-white text-xs rounded-lg hover:bg-primary"
-              >
-                <PlusIcon className="h-4 w-4" />
-                <span className="text-xs">Add Priority</span>
-              </button>
-            </div>
-
-            <div className="bg-white rounded-lg shadow overflow-hidden">
-              {list.length === 0 ? (
-                <div className="p-4 text-center text-gray-500 text-xs">No priorities found.</div>
-              ) : (
-                <div className="overflow-x-auto max-h-[400px] sm:max-h-[600px]">
-                  <table className="min-w-full divide-y divide-gray-200 text-xs">
-                    <thead className="bg-primary-600 text-white">
-                      <tr>
-                        <th className="px-3 py-2 text-left text-xs font-medium">Sr No</th>
-                        <th className="px-3 py-2 text-left text-xs font-medium">Priority Name</th>
-                        <th className="px-3 py-2 text-left text-xs font-medium">Status</th>
-                        <th className="px-3 py-2 text-right text-xs font-medium">Actions</th>
-                      </tr>
-                    </thead>
-                    <tbody className=" divide-y divide-gray-200">
-                      {list.map((item, index) => (
-                        <tr
-                          key={item._id} className={index % 2 === 0 ? 'bg-white' : 'bg-gray-50'}
-                        >
-                          <td className="px-3 py-2 text-sm text-gray-500">{index + 1}</td>
-                          <td className="px-3 py-2 text-sm font-medium text-gray-900">{item.name}</td>
-                          <td className="px-3 py-2 text-sm">
-                            <span
-                              className={`px-2 inline-flex text-xs font-semibold rounded-full ${item.isActive ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`}
-                            >
-                              {item.isActive ? 'Active' : 'Inactive'}
-                            </span>
-                          </td>
-                          <td className="px-3 py-2 text-right text-sm space-x-1">
-                            <button
-                              onClick={() => openModal(item)}
-                              className="text-blue-600 hover:text-blue-800"
-                            >
-                              <PencilIcon className="h-4 w-4" />
-                            </button>
-                            <button
-                              onClick={() => deletebutton(item._id)}
-                              className="text-red-600 hover:text-red-800"
-                            >
-                              <TrashIcon className="h-4 w-4" />
-                            </button>
-                            <button
-                              onClick={() => changeStatus(item._id)}
-                              className={`${item.isActive ? 'text-yellow-600 hover:text-yellow-800' : 'text-green-600 hover:text-green-800'}`}
-                            >
-                              {item.isActive ? (
-                                <XCircleIcon className="h-4 w-4" />
-                              ) : (
-                                <CheckCircleIcon className="h-4 w-4" />
-                              )}
-                            </button>
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-              )}
-            </div>
-          </div>
-
           {/* Right Side Modal */}
           {isModalOpen && (
             <div className="fixed right-0 top-0 h-full w-full max-w-md bg-white shadow-lg z-50 transition-all duration-300 sm:w-96">
@@ -298,6 +224,80 @@ const { showSnackbar } = useSnackbar();
               </div>
             </div>
           )}
+ 
+          {/* Main Content */}
+          <div className={`flex-1 transition-all duration-300 ${isModalOpen ? 'mr-0 sm:mr-80' : ''}`}>
+            <div className="flex justify-between items-center mb-4">
+              <h1 className="text-lg font-semibold text-gray-800">Priority</h1>
+              <button
+                onClick={() => { openModal(null) }}
+                className="flex items-center gap-1 px-2 py-1 bg-primary text-white text-xs rounded-lg hover:bg-primary"
+              >
+                <PlusIcon className="h-4 w-4" />
+                <span className="text-xs">Add Priority</span>
+              </button>
+            </div>
+
+            <div className="bg-white rounded-lg shadow overflow-hidden">
+              {list.length === 0 ? (
+                <div className="p-4 text-center text-gray-500 text-xs">No priorities found.</div>
+              ) : (
+                <div className="overflow-x-auto max-h-[400px] sm:max-h-[600px]">
+                  <table className="min-w-full divide-y divide-gray-200 text-xs">
+                    <thead className="bg-primary-600 text-white">
+                      <tr>
+                        <th className="px-3 py-2 text-left text-xs font-medium">Sr No</th>
+                        <th className="px-3 py-2 text-left text-xs font-medium">Priority Name</th>
+                        <th className="px-3 py-2 text-left text-xs font-medium">Status</th>
+                        <th className="px-3 py-2 text-right text-xs font-medium">Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody className=" divide-y divide-gray-200">
+                      {list.map((item, index) => (
+                        <tr
+                          key={item._id} className={index % 2 === 0 ? 'bg-white' : 'bg-gray-50'}
+                        >
+                          <td className="px-3 py-2 text-sm text-gray-500">{index + 1}</td>
+                          <td className="px-3 py-2 text-sm font-medium text-gray-900">{item.name}</td>
+                          <td className="px-3 py-2 text-sm">
+                            <span
+                              className={`px-2 inline-flex text-xs font-semibold rounded-full ${item.isActive ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`}
+                            >
+                              {item.isActive ? 'Active' : 'Inactive'}
+                            </span>
+                          </td>
+                          <td className="px-3 py-2 text-right text-sm space-x-1">
+                            <button
+                              onClick={() => openModal(item)}
+                              className="text-blue-600 hover:text-blue-800"
+                            >
+                              <PencilIcon className="h-4 w-4" />
+                            </button>
+                            <button
+                              onClick={() => deletebutton(item._id)}
+                              className="text-red-600 hover:text-red-800"
+                            >
+                              <TrashIcon className="h-4 w-4" />
+                            </button>
+                            <button
+                              onClick={() => changeStatus(item._id)}
+                              className={`${item.isActive ? 'text-yellow-600 hover:text-yellow-800' : 'text-green-600 hover:text-green-800'}`}
+                            >
+                              {item.isActive ? (
+                                <XCircleIcon className="h-4 w-4" />
+                              ) : (
+                                <CheckCircleIcon className="h-4 w-4" />
+                              )}
+                            </button>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              )}
+            </div>
+          </div>
 
         </div>
       </div>

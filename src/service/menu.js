@@ -1,10 +1,10 @@
 import axiosInstance from "./axiosInstance";
 
-class AuthService {
+class MenuService {
   // Method to get status
-  async Register(formData) {
+  async getStatus() {
     try {
-      const response = await axiosInstance.post("/employee/register",formData);
+      const response = await axiosInstance.get("/menu/getallmenu");
       return response;
     } catch (error) {
       console.error("Error getting status:", error);
@@ -14,4 +14,4 @@ class AuthService {
  
 }
 
-export default new AuthService();
+export default new MenuService();

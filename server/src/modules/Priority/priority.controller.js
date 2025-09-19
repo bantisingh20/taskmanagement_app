@@ -1,5 +1,5 @@
-const PriorityModel = require('../models/priority.model');
-const httpStatus = require('../constants/httpStatus');
+const PriorityModel = require('./priority.model');
+const httpStatus = require('../../constants/httpStatus');
 
 // module.exports.getAllPriorities = async (req, res) => {
 //   try {
@@ -16,7 +16,7 @@ exports.getAllPriorities = async (req, res) => {
     const priorities = await PriorityModel.find().where({isDelete: false});
     const total = 0;//await PriorityModel.countDocuments().where({isDelete: false});
     console.log(priorities);
-    res.status(200).json(httpStatus.success(priorities, { total }));
+    res.status(200).json(httpStatus.success(priorities, { total },'Priority fetched successfully'));
   } catch (error) {
     res.status(500).json(httpStatus.error(error.message, 500));
   }
