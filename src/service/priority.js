@@ -1,16 +1,16 @@
 import axiosInstance from "./axiosInstance";
 
-// export const getpriority = async () => {
-//   try {
-//     return await axiosInstance.get('/priority/get-all-prioritys');
-//     //return response;
-//   } catch (error) {
-//     console.error('Error fetching priorities:', error);
-//     return { error: error.message };
-//   }
-// };
-
 export const getpriority = async () => {
+  try {
+    return await axiosInstance.get('/priority/get-all-prioritys');
+    //return response;
+  } catch (error) {
+    console.error('Error fetching priorities:', error);
+    return { error: error.message };
+  }
+};
+
+export const getpriorityq = async () => {
     return await axiosInstance.get('/priority/get-all-prioritys');
 };
     

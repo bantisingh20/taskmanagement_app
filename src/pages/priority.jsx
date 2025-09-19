@@ -10,9 +10,11 @@ import {
 } from '@heroicons/react/24/outline';
 import { useApi } from '../hooks/useApi';
 import {createPriority, deletePriority, getpriority, makeActiveorInactive, updatePriority} from '../service/priority';
+import { useSnackbar } from '../components/SnackbarProvider';
+
 
 export const Priority = () => {
-
+const { showSnackbar } = useSnackbar();
   const [theme, setTheme] = useState('teal'); // Default theme
 
   const switchTheme = (newTheme) => {
@@ -36,6 +38,11 @@ export const Priority = () => {
 
   const fetchPriorities = async () => {
     const response = await getpriority(); 
+    if(response?.error){
+      showSnackbar('Error fetching priorities: ' + response.error, 'error');
+      return;
+    }
+    showSnackbar('Priorities fetched successfully', 'success');
     console.log('Fetched priorities data:', response);
    // const response = await execute({ url: '/priority/get-all-prioritys', method: 'GET' });
     setlist(response.data);
