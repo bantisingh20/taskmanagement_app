@@ -1,14 +1,18 @@
 //const express = require('express');
-const router = require('express').Router(); 
+const router = require('express').Router();
 
+const Parentfolder = 'modules/';
 const routes = [
-   { path:'priority' , module:'priority', },
-   { path:'status' , module:'status', },    
+    { path: 'employee', module: 'Employee/employee' },
+    { path: 'priority', module: 'Priority/priority', },
+    { path: 'status', module: 'Status/status', },
+    { path: 'menu', module: 'Menu/menu'},
+    { path: 'task', module: 'Task/task'},
 ];
-
+ 
 routes.forEach(route => {
-    router.use(`/${route.path}`, require(`./${route.module}.routes`));
+    router.use(`/${route.path}`, require(`../${Parentfolder}${route.module}.routes`));
+    //console.log(`../${Parentfolder}${route.module}.routes`)
 });
-//router.use('/priorities', require('./priority.routes'));
 
 module.exports = router;

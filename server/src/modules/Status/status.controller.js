@@ -1,4 +1,4 @@
-const TaskStatusModel = require('../models/taskstatus.model');
+const TaskStatusModel = require('./status.model');
 
 exports.getAllTaskStatuses = async (req, res) => {
   try {

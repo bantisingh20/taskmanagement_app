@@ -1,22 +1,15 @@
 import React, { useState } from 'react'; 
 import { Link } from 'react-router-dom';
+import { useForm } from 'react-hook-form';
+
 export const Login = () => {
    
-  const [formData, setFormData] = useState({
-    email: '',
-    password: '',
-    userType: 'visitor',
-  });
-
-  const handleChange = () => {
-    const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
-  };
-
-  const handleSubmit = async  () => {
-    e.preventDefault();
+  const { register,handleSubmit,reset } = useForm();
+  
+  const onSubmit = async  (formData) => {
+ 
     try {
-      const res = await login({ formData }).unwrap();
+      const res = await login({formData  }).unwrap();
       dispatch(setCredentials(res));
       // redirect or notify
     } catch (err) {
@@ -28,16 +21,15 @@ export const Login = () => {
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-100 via-blue-200 to-blue-300">
       <div className="w-full max-w-sm bg-white p-6 rounded-lg shadow-md border border-gray-200">
         <h2 className="text-center text-xl font-semibold text-gray-700 mb-4">Login</h2>
-        <form onSubmit={handleSubmit} className="space-y-4 text-sm">
+        <form onSubmit={handleSubmit(onSubmit)} id='loginform' className="space-y-4 text-sm">
           <div>
             <label className="block text-gray-600 mb-1">Email</label>
             <input
               type="email"
-              name="email"
+              name="email" 
               required
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400 text-sm"
-              value={formData.email}
-              onChange={handleChange}
+              
               placeholder="you@example.com"
             />
           </div>
@@ -48,8 +40,7 @@ export const Login = () => {
               name="password"
               required
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400 text-sm"
-              value={formData.password}
-              onChange={handleChange}
+         
               placeholder="••••••••"
             />
           </div>

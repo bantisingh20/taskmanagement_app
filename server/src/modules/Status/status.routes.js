@@ -1,5 +1,5 @@
 const router = require('express').Router();
-const TaskStatusController = require('../controllers/taskstatus.controller');
+const TaskStatusController = require('./status.controller');
 
 router.get('/get', TaskStatusController.getAllTaskStatuses);
 router.post('/add', TaskStatusController.createTaskStatus);

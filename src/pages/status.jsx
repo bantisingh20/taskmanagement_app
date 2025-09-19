@@ -7,11 +7,12 @@ import {
   XCircleIcon,
   PlusIcon,
   XMarkIcon
-} from '@heroicons/react/24/outline'; 
+} from '@heroicons/react/24/outline';
 import StatusService from '../service/status';
+import { useSnackbar } from '../components/SnackbarProvider';
 
 export const Status = () => {
-
+  const { showSnackbar } = useSnackbar();
   const { register, handleSubmit, formState: { errors }, reset } = useForm();
   const [list, setlist] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -21,12 +22,16 @@ export const Status = () => {
     const response = await StatusService.getStatus();
     if (response?.success) {
       setlist(response.data);
+      showSnackbar(response.message, 'success');
+      return 
     }
+    showSnackbar('something went wrong', 'error');
   };
 
   useEffect(() => {
-    fetchStatuses(); 
-  }, [list?.length]);
+    fetchStatuses();
+  }, [list?.length]); //jitni baar length chagne hoga api call hogi 
+  // agar dependency nikal do toh only at the time of render hy call hoga.
 
 
   const onSubmit = async (formData) => {
@@ -37,12 +42,20 @@ export const Status = () => {
         setlist(list.map(p =>
           p._id === currentitem._id ? { ...p, name: formData.name } : p
         ));
+        showSnackbar(response.message, 'success');
+      }
+      else{
+        showSnackbar('something went wrong', 'error');
       }
     } else {
-     
-      response = await  StatusService.createStatus(formData);
+
+      response = await StatusService.createStatus(formData);
       if (response?.success) {
         setlist([...list, response.data]);
+        showSnackbar(response.message, 'success');
+      }
+      else{
+        showSnackbar('something went wrong', 'error');
       }
     }
     closeModal();
@@ -58,7 +71,7 @@ export const Status = () => {
   const changeStatus = async (id) => {
     const priority = list.find(p => p._id === id);
     const updatedStatus = !priority.isActive;// === true ? false : true;
-     const response = await StatusService.makeActiveOrInactive(id);
+    const response = await StatusService.makeActiveOrInactive(id);
     if (response?.success) {
       setlist(list.map(p =>
         p._id === id ? { ...p, isActive: updatedStatus } : p
@@ -67,9 +80,11 @@ export const Status = () => {
   };
 
   const openModal = (status = null) => {
+    console.log(status)
     setCurrentitem(status);
     setIsModalOpen(true);
     if (status) {
+        console.log(status)
       reset({ name: status.name });
     } else {
       reset();
@@ -87,13 +102,13 @@ export const Status = () => {
     <div className="min-h-screen bg-gray-50 p-4 md:p-8">
       <div className="max-w-6xl mx-auto">
         <div className="flex">
-         
+
           {/* Main Content */}
           <div className={`flex-1 transition-all duration-300 ${isModalOpen ? 'mr-0 sm:mr-80' : ''}`}>
             <div className="flex justify-between items-center mb-4">
               <h1 className="text-lg font-semibold text-gray-800">Status</h1>
               <button
-                onClick={() => { setIsModalOpen(true); reset(); setCurrentitem(null); }}
+                onClick={() => { openModal() }}
                 className="flex items-center gap-1 px-2 py-1 bg-primary text-white text-xs rounded-lg hover:bg-primary"
               >
                 <PlusIcon className="h-4 w-4" />
