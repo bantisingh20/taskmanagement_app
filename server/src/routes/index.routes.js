@@ -1,5 +1,7 @@
 //const express = require('express');
+
 const router = require('express').Router();
+const Authcontroller = require("../controller/auth.controller");
 
 const Parentfolder = 'modules/';
 const routes = [
@@ -9,6 +11,9 @@ const routes = [
     { path: 'menu', module: 'Menu/menu'},
     { path: 'task', module: 'Task/task'},
 ];
+
+router.post("/auth/login",Authcontroller.login);
+router.post("/auth/register",Authcontroller.register);
  
 routes.forEach(route => {
     router.use(`/${route.path}`, require(`../${Parentfolder}${route.module}.routes`));
