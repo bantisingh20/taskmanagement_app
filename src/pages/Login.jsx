@@ -1,16 +1,30 @@
-import React, { useState } from 'react'; 
-import { Link } from 'react-router-dom';
+import React, { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
-
+import { useAuth } from '../context/authcontext';
+import AuthService from '../service/auth';
+import { useSnackbar } from '../components/SnackbarProvider';
 export const Login = () => {
-   
-  const { register,handleSubmit,reset } = useForm();
-  
-  const onSubmit = async  (formData) => {
- 
+
+  const { register, handleSubmit, formState: { errors }, reset } = useForm()
+  const { showSnackbar } = useSnackbar();
+  const { Authlogin, logout } = useAuth();
+  const navigate = useNavigate();
+  const onSubmit = async (formData) => {
+
     try {
-      const res = await login({formData  }).unwrap();
-      dispatch(setCredentials(res));
+      console.log(formData);
+      const res = await AuthService.Login(formData);
+      if (res?.success) {
+        showSnackbar('Login successfully', 'success');
+        Authlogin(res)
+        navigate('/dashboard');
+        console.log('/go to dashbaord');
+      }
+      else {
+        showSnackbar('Invalid credentials', 'error');
+      }
+
       // redirect or notify
     } catch (err) {
       console.error('Login failed', err);
@@ -26,10 +40,10 @@ export const Login = () => {
             <label className="block text-gray-600 mb-1">Email</label>
             <input
               type="email"
-              name="email" 
+              name="email"
               required
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400 text-sm"
-              
+              {...register("emailid", { required: "Email is required" })}
               placeholder="you@example.com"
             />
           </div>
@@ -40,11 +54,11 @@ export const Login = () => {
               name="password"
               required
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400 text-sm"
-         
+              {...register("password", { required: "Password is required" })}
               placeholder="••••••••"
             />
           </div>
-          
+
           <button
             type="submit"
             className="w-full bg-blue-500 hover:bg-blue-600 text-white py-2 rounded-md transition-colors text-sm"

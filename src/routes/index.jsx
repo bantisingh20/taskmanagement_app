@@ -14,7 +14,7 @@ import { Status } from '../pages/status.jsx';
 
 export const AppRoutes = () => {
   const { isAuthenticated } = useAuth();
-
+  console.log('index :  '+ isAuthenticated);
   return (
     <BrowserRouter>
       <Routes>
@@ -24,21 +24,8 @@ export const AppRoutes = () => {
         <Route path="/reset-password" element={<ForgetPassword />} />
         <Route path="/forget-password" element={<ForgetPassword />} />
 
-         <Route
-          path="/"
-          element={
-            isAuthenticated ? <Navigate to="/dashboard" /> : <Navigate to="/login" />
-          }
-        />
-
-         <Route
-          path="/"
-          element={
-            <PrivateRoute>
-              <Layout />
-            </PrivateRoute>
-          }
-        >
+        <Route path="/"  element={ isAuthenticated ? <Navigate to="/dashboard" /> : <Navigate to="/login" />  }  />
+        <Route path="/"  element={ <PrivateRoute>  <Layout /> </PrivateRoute> } >
           <Route path="dashboard" element={<Dashboards />} />
           <Route path="all-tasks" element={<TaskList />} />
           <Route path="add-task" element={<AddTask />} />
